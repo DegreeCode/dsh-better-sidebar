@@ -55,23 +55,6 @@ export function liveActivityLabel(
   return detail === '' ? label : `${label}${separator(t)}${detail}`
 }
 
-/**
- * The last-resort activity text: the ranked categories spelled out as
- * `kind ×count`. It keeps a card informative when the host's `chat` wording is
- * unavailable (renamed keys, or a deployment where the chat target never
- * mounted) without inventing a second vocabulary for the normal case — the
- * category names are the host's own, and they are language-neutral.
- *
- * @param summary - a stage's summary.
- * @returns the counts text, or undefined when the stage called nothing.
- */
-export function activityCountsText(
-  summary: ProcessActivitySummary | undefined,
-): string | undefined {
-  const counts = summary?.counts ?? []
-  if (counts.length === 0) return undefined
-  return counts.map(entry => `${entry.kind} ×${entry.count}`).join(' · ')
-}
 
 /**
  * The settled range's title: the top three categories' `done.*` wording joined

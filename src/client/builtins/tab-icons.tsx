@@ -20,7 +20,6 @@ import styles from './tab-icons.module.css'
 import {
   VscCommentDiscussion,
   VscGitCommit,
-  VscGlobe,
   VscLayers,
   VscTerminal,
 } from 'react-icons/vsc'
@@ -65,7 +64,3 @@ export const sidechatTabIcon: TabIcon = (size) =>
  */
 export const terminalTabIcon: TabIcon = (size) =>
   themed(css.terminal, <VscTerminal size={Math.max(10, Math.round(size * 0.85))} />)
-
-/** Browser — the same secondary accent as the side chat's sibling surfaces. */
-export const browserTabIcon: TabIcon = (size) =>
-  themed(css.browser, <VscGlobe size={size} />)

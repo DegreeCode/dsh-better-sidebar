@@ -137,7 +137,7 @@ export function useTweenedLayout(layout: GraphLayout): GraphLayout {
 }
 
 /** Whether the reader asked the platform for less motion. */
-function prefersReducedMotion(): boolean {
+export function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined'
     && typeof window.matchMedia === 'function'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches

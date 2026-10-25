@@ -41,15 +41,8 @@ import {
   textTailLines, type GraphBox,
 } from './tasks-graph-layout.ts'
 import { useTweenedLayout } from './tasks-layout-tween.ts'
-import { easeOut as glideEase } from './tasks-layout-tween.ts'
+import { easeOut as glideEase, prefersReducedMotion } from './tasks-layout-tween.ts'
 import { fitTransform, GLIDE_MS, lerpTransform, type ViewTransform } from './tasks-view-glide.ts'
-
-/** Whether the reader asked the platform for less motion. */
-function prefersReducedMotion(): boolean {
-  return typeof window !== 'undefined'
-    && typeof window.matchMedia === 'function'
-    && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-}
 import {
   activityLine, agentChip, agentMeta, flatten, foldErrorTally, foldPreviews, FoldGlyph,
   foldTally, TaskLine, WorkflowGlyph, workflowMeta,
