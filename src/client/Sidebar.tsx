@@ -50,7 +50,7 @@ import { useHostFeeds } from './sidebar/use-host-feeds.ts'
 import { mountedSessions } from './native/surface.ts'
 import { useRightPanelOpen } from './sidebar/right-panel-open.ts'
 import type { TabDragPayload } from './TabBar.tsx'
-import { t } from './locales.ts'
+import { nativeDictsAttached, subscribeNativeDicts, t } from './locales.ts'
 import { useSessionRoot } from './use-session-root.ts'
 import css from './sidebar.module.css'
 
@@ -101,9 +101,15 @@ export function Sidebar(props: { ctx: Context; store: SidebarStore }) {
   // Copy freshness: re-render the whole tree when the DSH locale switches.
   // The module-level t() reads the active locale at call time, so a root
   // re-render alone re-localizes every panel (no memo barriers below).
+  // The lazy third-language dictionaries (DSH on e.g. `ko`) land after the
+  // locale switch itself, so their arrival is part of the revision too.
   const localeRevision = useSyncExternalStore(
-    useMemo(() => (callback: () => void) => ctx.locale.subscribe(callback), [ctx]),
-    useCallback(() => ctx.locale.getSnapshot().active, [ctx]),
+    useMemo(() => (callback: () => void) => {
+      const offLocale = ctx.locale.subscribe(callback)
+      const offNative = subscribeNativeDicts(callback)
+      return () => { offLocale(); offNative() }
+    }, [ctx]),
+    useCallback(() => `${ctx.locale.getSnapshot().active}${nativeDictsAttached() ? ':native' : ''}`, [ctx]),
   )
   void localeRevision
 

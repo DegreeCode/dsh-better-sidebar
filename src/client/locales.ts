@@ -1292,10 +1292,11 @@ export const en: Record<keyof typeof zh, string> = {
 export const LOCALE_NS = 'betterSidebar'
 
 // The 19 non-zh/en dictionaries live in the LAZY `locale` chunk
-// (src/client/chunks/locale.tsx → lib/client-locale.js): `t()` only ever
-// consults zh/en plus the better-locale override store, so those dicts are
-// needed only when better-locale is installed — the client apply fetches the
-// chunk there and registers its `localeDicts` into the override store. They
+// (src/client/chunks/locale.tsx → lib/client-locale.js): they are needed only
+// when better-locale is installed (the client apply registers `localeDicts`
+// into its override store) or when DSH's own active locale is a third
+// language such as `ko` (the client apply attaches them through
+// attachNativeDicts). They
 // used to sit statically in the core bundle (≈ half its weight) for a code
 // path most sessions never enter.
 
@@ -1414,6 +1415,60 @@ export function attachBetterLocale(store: typeof betterLocaleStore): void {
 }
 
 /**
+ * The lazy `locale` chunk's dictionaries, attached by the client apply when
+ * DSH itself is on a third language (e.g. `ko` from a language-pack plugin
+ * registered into `ctx.locale`). Unlike the better-locale override, this
+ * path follows DSH's own active locale id, so no override store is needed.
+ */
+let nativeDicts: Record<string, Record<string, string>> | undefined
+const nativeListeners = new Set<() => void>()
+
+/**
+ * Attach (or detach, with undefined) the third-language dictionaries and
+ * notify {@link subscribeNativeDicts} listeners so the chrome re-renders
+ * once the lazy chunk lands.
+ */
+export function attachNativeDicts(dicts: Record<string, Record<string, string>> | undefined): void {
+  nativeDicts = dicts
+  for (const listener of nativeListeners) listener()
+}
+
+/** Subscribe to {@link attachNativeDicts} changes; returns the unsubscribe. */
+export function subscribeNativeDicts(listener: () => void): () => void {
+  nativeListeners.add(listener)
+  return () => { nativeListeners.delete(listener) }
+}
+
+/** Whether the third-language dictionaries are attached (a re-render key). */
+export function nativeDictsAttached(): boolean {
+  return nativeDicts !== undefined
+}
+
+/**
+ * Whether a locale id is served by neither the zh nor the en dictionary, so
+ * the lazy third-language chunk may hold its copy (`ko`, `ja`, `zh-TW`, …).
+ */
+export function wantsNativeDict(locale: string): boolean {
+  const id = locale.toLowerCase()
+  if (id === '' || id === 'en' || id.startsWith('en-')) return false
+  return !['zh', 'zh-cn', 'zh-sg', 'zh-hans'].includes(id)
+}
+
+/** The attached dictionary for a locale id: exact id first, then its base language. */
+function nativeDictFor(locale: string): Record<string, string> | undefined {
+  if (nativeDicts === undefined || !wantsNativeDict(locale)) return undefined
+  const id = locale.toLowerCase()
+  const base = id.split('-')[0]
+  let fallback: Record<string, string> | undefined
+  for (const [name, dict] of Object.entries(nativeDicts)) {
+    const candidate = name.toLowerCase()
+    if (candidate === id) return dict
+    if (candidate === base) fallback = dict
+  }
+  return fallback
+}
+
+/**
  * The active locale id ('zh' | 'en'): the DSH locale service's snapshot when
  * attached, else the browser language.
  */
@@ -1436,7 +1491,10 @@ export function t(key: CopyKey, params?: Record<string, string | number>): strin
   const dshActive = localeService?.getSnapshot().active ?? ''
   const override = betterLocaleStore?.getOverride(dshActive, LOCALE_NS, key)
   let text: string | undefined = override
-  // 2. Fall back to the zh/en chain when no override matched.
+  // 2. DSH's own active locale is a third language (e.g. `ko` registered by
+  //    a language pack) and the lazy chunk's dictionary for it is attached.
+  text ??= nativeDictFor(activeLocale())?.[key]
+  // 3. Fall back to the zh/en chain when nothing above matched.
   if (text === undefined) {
     const dict = activeLocale().toLowerCase().startsWith('zh') ? zh : en
     text = dict[key]
@@ -1482,7 +1540,7 @@ export function localeSignature(): string {
   const override = betterLocaleStore?.isOverrideActive(dshActive) === true
     ? betterLocaleStore.active ?? ''
     : ''
-  return `${dshActive}:${override}`
+  return `${dshActive}:${override}:${nativeDictsAttached() ? 'native' : ''}`
 }
 
 /** Format an ISO 8601 author date relative to now (刚刚 / N 分钟前 / N 小时前 / 昨天 / date). */

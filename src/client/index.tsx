@@ -28,7 +28,7 @@ import { registerSettingsNavIcon } from './settings-nav-icon.ts'
 import { loadBootDecision } from './prefs.ts'
 import { SideCardSection } from './SideCardSection.tsx'
 import { api } from './api.ts'
-import { LOCALE_NS, attachLocale, attachBetterLocale, t, zh, en } from './locales.ts'
+import { LOCALE_NS, attachLocale, attachBetterLocale, attachNativeDicts, t, wantsNativeDict, zh, en } from './locales.ts'
 import { loadChunk } from './chunk-loader.ts'
 import css from './sidebar.module.css'
 import './layout.css'
@@ -72,6 +72,31 @@ export function apply(ctx: Context): void {
     const offEn = ctx.locale.register(LOCALE_NS, 'en', en)
     return () => { offZh(); offEn() }
   }, 'dsh-better-sidebar: dictionaries')
+
+  // DSH itself on a third language (e.g. `ko` from a language-pack plugin):
+  // t() would fall back to en, so fetch the lazy `locale` chunk the first
+  // time the active locale needs it and attach its dictionaries. zh/en
+  // sessions never load the chunk.
+  ctx.effect(() => {
+    let disposed = false
+    let requested = false
+    const sync = (): void => {
+      if (requested || !wantsNativeDict(ctx.locale.getSnapshot().active)) return
+      requested = true
+      void loadChunk('locale')
+        .then(mod => {
+          if (!disposed) attachNativeDicts(mod.localeDicts as Record<string, Record<string, string>>)
+        })
+        .catch(() => { requested = false /* t() keeps the en fallback; a later switch retries */ })
+    }
+    sync()
+    const unsubscribe = ctx.locale.subscribe(sync)
+    return () => {
+      disposed = true
+      unsubscribe()
+      attachNativeDicts(undefined)
+    }
+  }, 'dsh-better-sidebar: native third-language dictionaries')
 
   // Opt-in third-language support through @huanlin/dsh-plugin-better-locale.
   // When that plugin is installed, it publishes `ctx.betterLocale` (the

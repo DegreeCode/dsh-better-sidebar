@@ -47,7 +47,7 @@ import { LargeFileView } from './LargeFileView.tsx'
 import { useMarkdownSurface } from './use-markdown-surface.ts'
 import { MdToc } from './md-toc.tsx'
 import { splitMermaidBlocks } from './mermaid-blocks.ts'
-import { localeSignature, t } from './locales.ts'
+import { localeSignature, subscribeNativeDicts, t } from './locales.ts'
 import { HTML_IFRAME_SANDBOX } from './html-preview.ts'
 import type { EditorToolbarState, FileViewerProps } from './service.ts'
 import css from './sidebar.module.css'
@@ -244,9 +244,11 @@ export function TextEditor(props: FileViewerProps) {
       : undefined
     const offLocale = locale?.subscribe?.(sync)
     const offOverride = betterLocale?.subscribe?.(sync)
+    const offNative = subscribeNativeDicts(sync)
     return () => {
       offLocale?.()
       offOverride?.()
+      offNative()
     }
   }, [ctx])
 

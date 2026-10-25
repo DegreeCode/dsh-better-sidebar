@@ -6,7 +6,7 @@
  * interpolation.
  */
 import { afterEach, describe, expect, it } from 'vitest'
-import { LOCALE_NS, attachBetterLocale, attachLocale, chatT, en, isZh, relativeTime, t, zh } from '../src/client/locales.ts'
+import { LOCALE_NS, attachBetterLocale, attachLocale, attachNativeDicts, chatT, en, isZh, localeSignature, relativeTime, subscribeNativeDicts, t, wantsNativeDict, zh } from '../src/client/locales.ts'
 import { localeDicts } from '../src/client/chunks/locale.tsx'
 
 /** Minimal structural fake of the DSH LocaleService face the sidebar uses. */
@@ -37,6 +37,7 @@ function stubNavigatorLanguage(lang: string | undefined): void {
 afterEach(() => {
   attachLocale(undefined)
   attachBetterLocale(undefined)
+  attachNativeDicts(undefined)
   stubNavigatorLanguage(undefined)
 })
 
@@ -310,5 +311,63 @@ describe('locales (better-locale override)', () => {
       expect(text, `ja translation for "${key}"`).toBeTruthy()
       expect(text, `ja translation for "${key}"`).not.toBe(key)
     }
+  })
+})
+
+describe('locales (DSH on a third language)', () => {
+  it('asks for the lazy dictionaries only outside zh/en', () => {
+    for (const id of ['ko', 'ja', 'zh-TW', 'zh-HK', 'ko-KR']) expect(wantsNativeDict(id), id).toBe(true)
+    for (const id of ['', 'en', 'en-US', 'zh', 'zh-CN', 'zh-Hans']) expect(wantsNativeDict(id), id).toBe(false)
+  })
+
+  it('renders ko copy when DSH itself is on ko and the dictionaries are attached', () => {
+    const locale = new FakeLocale()
+    locale.switchTo('ko')
+    attachLocale(locale)
+    // Before the lazy chunk lands: the en fallback.
+    expect(t('explorer')).toBe(en.explorer)
+
+    attachNativeDicts(localeDicts)
+    expect(t('explorer')).toBe(localeDicts.ko!.explorer)
+    expect(t('timeMinutesAgo', { n: 5 })).toBe(localeDicts.ko!.timeMinutesAgo!.replace('{n}', '5'))
+    expect(isZh()).toBe(false)
+  })
+
+  it('matches a regional id to its base language and an exact regional dict first', () => {
+    const locale = new FakeLocale()
+    attachLocale(locale)
+    attachNativeDicts(localeDicts)
+
+    locale.switchTo('ko-KR')
+    expect(t('explorer')).toBe(localeDicts.ko!.explorer)
+
+    locale.switchTo('zh-TW')
+    expect(t('explorer')).toBe(localeDicts['zh-TW']!.explorer)
+    expect(isZh()).toBe(true)
+  })
+
+  it('leaves zh/en untouched and falls back to en for a language without a dictionary', () => {
+    const locale = new FakeLocale()
+    attachLocale(locale)
+    attachNativeDicts(localeDicts)
+
+    locale.switchTo('zh')
+    expect(t('explorer')).toBe(zh.explorer)
+    locale.switchTo('en')
+    expect(t('explorer')).toBe(en.explorer)
+    locale.switchTo('es')
+    expect(t('explorer')).toBe(en.explorer)
+  })
+
+  it('notifies subscribers and changes the locale signature when the dictionaries land', () => {
+    let calls = 0
+    const off = subscribeNativeDicts(() => { calls += 1 })
+    const before = localeSignature()
+    attachNativeDicts(localeDicts)
+    expect(calls).toBe(1)
+    expect(localeSignature()).not.toBe(before)
+    off()
+    attachNativeDicts(undefined)
+    expect(calls).toBe(1)
   })
 })
