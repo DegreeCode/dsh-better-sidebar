@@ -27,7 +27,7 @@ import { referenceHeadingIds, referenceSlug, scanDocumentAnchors } from './helpe
 const REPO_ROOT = process.cwd()
 
 /** The repo's own READMEs: real documents whose headings feed the parity case. */
-const README_FILES = ['README.md', 'README_ZH.md']
+const README_FILES = ['README.md', 'README_ZH.md', 'README_KO.md']
 
 /**
  * The anchor-resolution fixture: a GitHub-style table of contents coupled to
