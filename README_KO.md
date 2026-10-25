@@ -44,6 +44,12 @@ dsh plugin --profile web add dsh-better-sidebar@latest
 
 그다음 **브라우저를 강력 새로 고침**하세요(Cmd/Ctrl+Shift+R). DSH **0.2.1-rc.1+**가 필요합니다.
 
+> **이 포크(DegreeCode)의 빌드를 설치하려면** [Releases](https://github.com/DegreeCode/dsh-better-sidebar/releases)에 첨부된 tarball을 쓰세요. `lib/`가 이미 빌드되어 있어 Git 주소로 설치할 때 나는 `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED` 없이 설치됩니다.
+>
+> ```sh
+> dsh plugin --profile web add https://github.com/DegreeCode/dsh-better-sidebar/releases/download/v0.28.0/dsh-better-sidebar-0.28.0.tgz
+> ```
+
 > **호환성 경고 — v0.28.0이 이 플러그인의 npm `latest`를 이어받습니다.** DSH 자체의 npm `latest`는 아직 **0.2.0-rc.2**를 가리키며, 이 버전은 v0.28.0과 **호환되지 않습니다**. 해당 호스트에서는 위 명령 대신 `dsh-better-sidebar@0.26.1`로 고정하세요. DSH 0.2.1-alpha.5 사용자는 `dsh-better-sidebar@0.28.0-alpha.0`으로 고정해야 합니다. v0.28.0을 설치하기 전에 호스트를 `0.2.1-rc.1`로 직접 업그레이드하세요. 두 패키지의 `latest` 태그는 서로 독립적입니다.
 
 <details>
