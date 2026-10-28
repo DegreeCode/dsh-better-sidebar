@@ -4,7 +4,7 @@
   <b style="font-size: 1.15em;">A dual workbench for DSH: native right sidebar + self-drawn bottom panel, with the <code>ctx.betterSidebar</code> service open to every plugin</b><br /><br />
   <a href="https://www.npmjs.com/package/dsh-better-sidebar"><img alt="npm version" src="https://img.shields.io/npm/v/dsh-better-sidebar" /></a>
   <a href="https://www.npmjs.com/package/dsh-better-sidebar"><img alt="npm downloads" src="https://img.shields.io/npm/dm/dsh-better-sidebar" /></a>
-  <a href="https://github.com/omdsh-dev/DSH-better-sidebar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/omdsh-dev/DSH-better-sidebar/actions/workflows/ci.yml/badge.svg" /></a>
+  <a href="https://github.com/DegreeCode/dsh-better-sidebar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/DegreeCode/dsh-better-sidebar/actions/workflows/ci.yml/badge.svg" /></a>
   <a href="https://github.com/omdsh-dev/DSH-better-sidebar/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/omdsh-dev/DSH-better-sidebar" /></a>
   <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
   <a href="https://www.npmjs.com/package/@deepseek-ai/dsh?activeTab=versions"><img alt="Supported DSH versions: 0.2.1-rc.1+" src="https://img.shields.io/badge/DSH-0.2.1--rc.1%2B-4d6bfe" /></a>
@@ -13,6 +13,8 @@
 <div align="center">
   🌏 <a href="./README_ZH.md">中文</a> · <a href="./README.md"><b>English</b></a> · <a href="./README_KO.md">한국어</a>
 </div>
+
+> **DegreeCode fork** of [omdsh-dev/DSH-better-sidebar](https://github.com/omdsh-dev/DSH-better-sidebar). It retains the upstream commit history and adds Korean translation corrections, native DSH language following, and GitHub release tarballs. Install this fork from [Releases](https://github.com/DegreeCode/dsh-better-sidebar/releases/tag/v0.28.2); the `dsh-better-sidebar` npm package is published by upstream.
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/23187822-047e-45cc-b480-fe997bd55b86" muted autoplay loop playsinline controls width="100%"></video>
@@ -39,19 +41,21 @@ With the `dsh-context` plugin installed, three places offer a one-click jump int
 ## 🚀 Installation
 
 ```sh
-dsh plugin --profile web add dsh-better-sidebar@latest
+dsh plugin --profile web add https://github.com/DegreeCode/dsh-better-sidebar/releases/download/v0.28.2/dsh-better-sidebar-0.28.2.tgz
 ```
 
 Then **hard-refresh the browser** (Cmd/Ctrl+Shift+R). Requires DSH **0.2.1-rc.1+**.
 
-> **Compatibility warning — match the plugin to the host line.** As of 2026-10-26, DSH's npm `latest` is **0.2.1-rc.2**, so the command above installs the compatible v0.28.2. Hosts still on **0.2.0-rc.2** must pin `dsh-better-sidebar@0.26.1` (and should upgrade the host to `0.2.1-rc.2` first); DSH 0.2.1-alpha.5 users must pin `dsh-better-sidebar@0.28.0-alpha.0`. The marketplace installer picks the plugin's `latest` regardless of host version, so an old host gets a version-rejection error — upgrade the host or pin the version explicitly. The two packages' `latest` tags are independent.
+> **Compatibility warning — match the plugin to the host line.** This fork v0.28.2 requires **DSH 0.2.1-rc.1+**. Hosts still on **0.2.0-rc.2** must pin upstream `dsh-better-sidebar@0.26.1`; DSH **0.2.1-alpha.5** users must pin upstream `dsh-better-sidebar@0.28.0-alpha.0`. Those older npm releases do not include this fork's changes. The marketplace picks the upstream plugin's `latest` regardless of host version; upgrade an older host or pin its compatible plugin explicitly. The host and plugin `latest` tags are independent.
+
+The release tarball includes the built `lib/`, avoiding `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED` when installing from Git. Replace `web` with your profile name.
 
 <details>
 <summary><b>Pick the plugin version for your DSH version</b></summary>
 
 | Your DSH version | Install command |
 | --- | --- |
-| **0.2.1-rc.1+** | `dsh plugin --profile web add dsh-better-sidebar@0.28.2` |
+| **0.2.1-rc.1+** | `dsh plugin --profile web add https://github.com/DegreeCode/dsh-better-sidebar/releases/download/v0.28.2/dsh-better-sidebar-0.28.2.tgz` |
 | **0.2.1-alpha.5** | `dsh plugin --profile web add dsh-better-sidebar@0.28.0-alpha.0` |
 | **0.2.0-rc.2** | `dsh plugin --profile web add dsh-better-sidebar@0.26.1` |
 | **0.2.0-rc.1** | `dsh plugin --profile web add dsh-better-sidebar@0.24.1` |
@@ -70,12 +74,12 @@ Always pin **exact versions** for older releases (`latest` moves forward with ea
 
 ```text
 Install the dsh-better-sidebar plugin (a sidebar workbench for DSH):
-1. Confirm DSH is 0.2.1-rc.1 or newer, then run dsh plugin --profile web add dsh-better-sidebar@0.28.2
+1. Confirm DSH is 0.2.1-rc.1 or newer, then run dsh plugin --profile web add https://github.com/DegreeCode/dsh-better-sidebar/releases/download/v0.28.2/dsh-better-sidebar-0.28.2.tgz
 2. Remind me to hard-refresh the browser (Cmd/Ctrl+Shift+R) afterwards
 If something fails, check the FAQ table in https://github.com/omdsh-dev/DSH-better-sidebar README first.
 ```
 
-**One-line script** — clone this repo and run `bash scripts/install.sh 0.28.2` (macOS / Linux / Windows Git Bash; `./scripts/install.ps1 -Version 0.28.2` for native Windows). It handles installation + bundle registration.
+**Upstream npm installer** — to install the upstream package, clone this repo and run `bash scripts/install.sh 0.28.2` (macOS / Linux / Windows Git Bash; `./scripts/install.ps1 -Version 0.28.2` for native Windows). It handles installation + bundle registration.
 
 **Updating**: just re-run the install command, then hard-refresh the browser.
 
@@ -92,7 +96,7 @@ If something fails, check the FAQ table in https://github.com/omdsh-dev/DSH-bett
 | **Two sidebars** on the page | Double mounting. Remove the legacy manual mount line (`- insert: ... better-sidebar ...`) from `~/.dsh/profiles/web/cordis.patch.yml`; aggregate packages mounting this package under a different id are auto-yielded, no action needed. |
 | Settings values gone after upgrade | Since DSH 0.1.7, preferences live on this plugin's mount row in the profile (default entry id `better-sidebar`). The plugin migrates your old `settings.yaml` values once on first start and never overwrites newer values. |
 | Terminal unavailable | Terminals are provided by **DSH itself** (this plugin ships no PTY) — see DSH docs; "host provides no terminal capability" in the bottom terminal means this deployment has no terminal controller mounted. |
-| `dsh: command not found` | Install DSH first; or use `npx -y --package @deepseek-ai/dsh@0.2.1-rc.1 dsh plugin --profile web add dsh-better-sidebar@0.28.2`. |
+| `dsh: command not found` | Install DSH first; or use `npx -y --package @deepseek-ai/dsh@0.2.1-rc.1 dsh plugin --profile web add https://github.com/DegreeCode/dsh-better-sidebar/releases/download/v0.28.2/dsh-better-sidebar-0.28.2.tgz`. |
 
 </details>
 

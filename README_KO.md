@@ -4,7 +4,7 @@
   <b style="font-size: 1.15em;">DSH용 듀얼 워크벤치: 네이티브 오른쪽 사이드바 + 자체 렌더링 하단 패널, 그리고 모든 플러그인에 열려 있는 <code>ctx.betterSidebar</code> 서비스</b><br /><br />
   <a href="https://www.npmjs.com/package/dsh-better-sidebar"><img alt="npm version" src="https://img.shields.io/npm/v/dsh-better-sidebar" /></a>
   <a href="https://www.npmjs.com/package/dsh-better-sidebar"><img alt="npm downloads" src="https://img.shields.io/npm/dm/dsh-better-sidebar" /></a>
-  <a href="https://github.com/omdsh-dev/DSH-better-sidebar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/omdsh-dev/DSH-better-sidebar/actions/workflows/ci.yml/badge.svg" /></a>
+  <a href="https://github.com/DegreeCode/dsh-better-sidebar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/DegreeCode/dsh-better-sidebar/actions/workflows/ci.yml/badge.svg" /></a>
   <a href="https://github.com/omdsh-dev/DSH-better-sidebar/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/omdsh-dev/DSH-better-sidebar" /></a>
   <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
   <a href="https://www.npmjs.com/package/@deepseek-ai/dsh?activeTab=versions"><img alt="Supported DSH versions: 0.2.1-rc.1+" src="https://img.shields.io/badge/DSH-0.2.1--rc.1%2B-4d6bfe" /></a>
@@ -13,6 +13,8 @@
 <div align="center">
   🌏 <a href="./README_ZH.md">中文</a> · <a href="./README.md">English</a> · <a href="./README_KO.md"><b>한국어</b></a>
 </div>
+
+> [omdsh-dev/DSH-better-sidebar](https://github.com/omdsh-dev/DSH-better-sidebar)를 기반으로 한 **DegreeCode 포크**입니다. 원본 커밋 이력을 보존하고 한국어 번역 보완, DSH 자체 언어 추종, GitHub 릴리스 설치 파일을 유지합니다. 이 포크는 [Releases](https://github.com/DegreeCode/dsh-better-sidebar/releases/tag/v0.28.2)에서 설치하세요. npm의 `dsh-better-sidebar`는 업스트림이 배포합니다.
 
 <div align="center">
   <video src="https://github.com/user-attachments/assets/23187822-047e-45cc-b480-fe997bd55b86" muted autoplay loop playsinline controls width="100%"></video>
@@ -39,26 +41,21 @@ Git 패널 상단에서 **Git Graph**로 전환하면 로컬 브랜치, 원격 �
 ## 🚀 설치
 
 ```sh
-dsh plugin --profile web add dsh-better-sidebar@latest
+dsh plugin --profile web add https://github.com/DegreeCode/dsh-better-sidebar/releases/download/v0.28.2/dsh-better-sidebar-0.28.2.tgz
 ```
 
 그다음 **브라우저를 강력 새로 고침**하세요(Cmd/Ctrl+Shift+R). DSH **0.2.1-rc.1+**가 필요합니다.
 
-> **이 포크(DegreeCode)의 빌드를 설치하려면** [Releases](https://github.com/DegreeCode/dsh-better-sidebar/releases)에 첨부된 tarball을 쓰세요. `lib/`가 이미 빌드되어 있어 Git 주소로 설치할 때 나는 `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED` 없이 설치됩니다.
-> 아래 예시는 기존 포크 v0.28.1 릴리스입니다. 이 브랜치에는 업스트림 v0.28.2가 병합되어 있지만, 새 포크 릴리스를 게시하기 전까지는 기존 배포 파일을 사용합니다. npm 설치 명령은 업스트림 패키지를 설치합니다.
->
-> ```sh
-> dsh plugin --profile web add https://github.com/DegreeCode/dsh-better-sidebar/releases/download/v0.28.1/dsh-better-sidebar-0.28.1.tgz
-> ```
+릴리스 tarball에는 빌드된 `lib/`가 포함되어 있어 Git 주소로 직접 설치할 때 발생하는 `ERR_PNPM_GIT_DEP_PREPARE_NOT_ALLOWED`를 피할 수 있습니다. `web`은 사용하는 프로필 이름으로 바꾸세요.
 
-> **호환성 경고 — 호스트 버전에 맞는 플러그인을 설치하세요.** 업스트림 v0.28.2도 DSH **0.2.1-rc.1+**가 필요합니다. DSH **0.2.0-rc.2**에서는 `dsh-better-sidebar@0.26.1`, DSH **0.2.1-alpha.5**에서는 `dsh-better-sidebar@0.28.0-alpha.0`으로 고정하세요. 마켓 설치기는 호스트 버전과 무관하게 플러그인의 `latest`를 고르므로, 이전 호스트는 먼저 업그레이드하거나 플러그인 버전을 명시해야 합니다. 두 패키지의 `latest` 태그는 서로 독립적입니다.
+> **호환성 경고 — 호스트 버전에 맞는 플러그인을 설치하세요.** 이 포크 v0.28.2는 DSH **0.2.1-rc.1+**가 필요합니다. DSH **0.2.0-rc.2**에서는 업스트림 `dsh-better-sidebar@0.26.1`, DSH **0.2.1-alpha.5**에서는 업스트림 `dsh-better-sidebar@0.28.0-alpha.0`으로 고정하세요. 이 이전 npm 버전에는 포크의 수정 사항이 포함되지 않습니다. 마켓 설치기는 호스트 버전과 무관하게 플러그인의 `latest`를 고르므로, 이전 호스트는 먼저 업그레이드하거나 플러그인 버전을 명시해야 합니다. 두 패키지의 `latest` 태그는 서로 독립적입니다.
 
 <details>
 <summary><b>DSH 버전에 맞는 플러그인 버전 고르기</b></summary>
 
 | 사용 중인 DSH 버전 | 설치 명령 |
 | --- | --- |
-| **0.2.1-rc.1+** | `dsh plugin --profile web add dsh-better-sidebar@0.28.2` |
+| **0.2.1-rc.1+** | `dsh plugin --profile web add https://github.com/DegreeCode/dsh-better-sidebar/releases/download/v0.28.2/dsh-better-sidebar-0.28.2.tgz` |
 | **0.2.1-alpha.5** | `dsh plugin --profile web add dsh-better-sidebar@0.28.0-alpha.0` |
 | **0.2.0-rc.2** | `dsh plugin --profile web add dsh-better-sidebar@0.26.1` |
 | **0.2.0-rc.1** | `dsh plugin --profile web add dsh-better-sidebar@0.24.1` |
@@ -77,12 +74,12 @@ dsh plugin --profile web add dsh-better-sidebar@latest
 
 ```text
 dsh-better-sidebar 플러그인(DSH용 사이드바 워크벤치)을 설치해 줘:
-1. DSH가 0.2.1-rc.1 이상인지 확인한 다음 dsh plugin --profile web add dsh-better-sidebar@0.28.2 을 실행해
+1. DSH가 0.2.1-rc.1 이상인지 확인한 다음 dsh plugin --profile web add https://github.com/DegreeCode/dsh-better-sidebar/releases/download/v0.28.2/dsh-better-sidebar-0.28.2.tgz 을 실행해
 2. 끝나면 브라우저를 강력 새로 고침(Cmd/Ctrl+Shift+R)하라고 알려 줘
 실패하면 먼저 https://github.com/omdsh-dev/DSH-better-sidebar README의 FAQ 표를 확인해.
 ```
 
-**한 줄 스크립트** — 이 저장소를 클론하고 `bash scripts/install.sh 0.28.2`를 실행하세요(macOS / Linux / Windows Git Bash; 네이티브 Windows는 `./scripts/install.ps1 -Version 0.28.2`). 설치와 번들 등록을 함께 처리합니다.
+**업스트림 npm 설치 스크립트** — 업스트림 패키지를 설치하려면 이 저장소를 클론하고 `bash scripts/install.sh 0.28.2`를 실행하세요(macOS / Linux / Windows Git Bash; 네이티브 Windows는 `./scripts/install.ps1 -Version 0.28.2`). 설치와 번들 등록을 함께 처리합니다.
 
 **업데이트**: 설치 명령을 다시 실행한 뒤 브라우저를 강력 새로 고침하면 됩니다.
 
@@ -99,7 +96,7 @@ dsh-better-sidebar 플러그인(DSH용 사이드바 워크벤치)을 설치해 �
 | 페이지에 **사이드바가 두 개** | 중복 마운트입니다. `~/.dsh/profiles/web/cordis.patch.yml`에서 예전 수동 마운트 줄(`- insert: ... better-sidebar ...`)을 지우세요. 이 패키지를 다른 id로 마운트하는 묶음 패키지는 자동으로 양보하므로 조치할 필요가 없습니다. |
 | 업그레이드 후 설정값이 사라짐 | DSH 0.1.7부터 환경설정은 프로필 안의 이 플러그인 마운트 행(기본 항목 id `better-sidebar`)에 저장됩니다. 플러그인은 첫 시작 시 예전 `settings.yaml` 값을 한 번 옮겨 오며, 더 새로운 값은 절대 덮어쓰지 않습니다. |
 | 터미널을 사용할 수 없음 | 터미널은 **DSH 자체**가 제공합니다(이 플러그인에는 PTY가 없습니다) — DSH 문서를 참고하세요. 하단 터미널에 "host provides no terminal capability"가 보이면 이 배포에 터미널 컨트롤러가 마운트되지 않은 것입니다. |
-| `dsh: command not found` | 먼저 DSH를 설치하거나, `npx -y --package @deepseek-ai/dsh@0.2.1-rc.1 dsh plugin --profile web add dsh-better-sidebar@0.28.2`를 사용하세요. |
+| `dsh: command not found` | 먼저 DSH를 설치하거나, `npx -y --package @deepseek-ai/dsh@0.2.1-rc.1 dsh plugin --profile web add https://github.com/DegreeCode/dsh-better-sidebar/releases/download/v0.28.2/dsh-better-sidebar-0.28.2.tgz`를 사용하세요. |
 
 </details>
 
